@@ -35,7 +35,8 @@ export default function ExpenseTracker({
       amount: parseFloat(newExpense.amount),
       description: newExpense.description,
       category: newExpense.category,
-      recurring: newExpense.recurring
+      recurring: newExpense.recurring,
+      weekId: ''
     })
 
     setNewExpense({
@@ -214,4 +215,5 @@ export default function ExpenseTracker({
       </div>
     </div>
   )
+
 }

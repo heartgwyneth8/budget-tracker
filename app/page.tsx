@@ -161,17 +161,17 @@ export default function BudgetTracker() {
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: COLORS.cream }}>
-      <div className="container mx-auto p-4 md:p-8 max-w-7xl">
+      <div className="container mx-auto px-3 sm:px-4 md:p-6 lg:p-8 max-w-7xl">
         {/* Header */}
-        <div className="mb-8">
-          <div className="flex items-center justify-between mb-4">
+        <div className="mb-6 sm:mb-8">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
             <div className="flex items-center gap-3">
-              <Wallet className="h-8 w-8" style={{ color: COLORS.pink }} />
+              <Wallet className="h-7 w-7 sm:h-8 sm:w-8" style={{ color: COLORS.pink }} />
               <div>
-                <h1 className="text-3xl font-bold" style={{ color: COLORS.darkGreen }}>
+                <h1 className="text-2xl sm:text-3xl font-bold" style={{ color: COLORS.darkGreen }}>
                   Weekly Budget Tracker
                 </h1>
-                <p className="text-gray-700">
+                <p className="text-sm sm:text-base text-gray-700">
                   Track your weekly allowance using the 50/30/20 budgeting rule
                 </p>
               </div>
@@ -179,46 +179,48 @@ export default function BudgetTracker() {
             
             {/* Week Navigation - Only show if allowance is set */}
             {weeklyAllowance > 0 && (
-              <div className="flex items-center space-x-4">
-                <button
-                  onClick={() => loadWeek(`${currentYear}-${currentWeek - 1}`)}
-                  className="p-2 rounded-lg hover:opacity-80 transition-opacity"
-                  style={{ backgroundColor: COLORS.lightPink, color: COLORS.pink }}
-                  title="Previous week"
-                >
-                  <ChevronLeft size={20} />
-                </button>
-                
-                <div className="text-center">
-                  <div className="font-bold text-lg" style={{ color: COLORS.pink }}>
-                    Week {currentWeek}, {currentYear}
+              <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-4">
+                <div className="flex items-center space-x-2 sm:space-x-4">
+                  <button
+                    onClick={() => loadWeek(`${currentYear}-${currentWeek - 1}`)}
+                    className="p-2 rounded-lg hover:opacity-80 transition-opacity"
+                    style={{ backgroundColor: COLORS.lightPink, color: COLORS.pink }}
+                    title="Previous week"
+                  >
+                    <ChevronLeft size={18} className="sm:size-5" />
+                  </button>
+                  
+                  <div className="text-center">
+                    <div className="font-bold text-base sm:text-lg" style={{ color: COLORS.pink }}>
+                      Week {currentWeek}, {currentYear}
+                    </div>
+                    <div className="text-xs sm:text-sm" style={{ color: COLORS.pink }}>
+                      {currentWeekDates.startDate} to {currentWeekDates.endDate}
+                    </div>
                   </div>
-                  <div className="text-sm" style={{ color: COLORS.pink }}>
-                    {currentWeekDates.startDate} to {currentWeekDates.endDate}
-                  </div>
+                  
+                  <button
+                    onClick={() => loadWeek(`${currentYear}-${currentWeek + 1}`)}
+                    className="p-2 rounded-lg hover:opacity-80 transition-opacity"
+                    style={{ backgroundColor: COLORS.lightPink, color: COLORS.pink }}
+                    title="Next week"
+                  >
+                    <ChevronRight size={18} className="sm:size-5" />
+                  </button>
                 </div>
-                
-                <button
-                  onClick={() => loadWeek(`${currentYear}-${currentWeek + 1}`)}
-                  className="p-2 rounded-lg hover:opacity-80 transition-opacity"
-                  style={{ backgroundColor: COLORS.lightPink, color: COLORS.pink }}
-                  title="Next week"
-                >
-                  <ChevronRight size={20} />
-                </button>
               </div>
             )}
           </div>
 
           {/* Start New Week Button - Only show if allowance is set */}
           {weeklyAllowance > 0 && (
-            <div className="flex justify-end mb-6">
+            <div className="flex justify-end mb-4 sm:mb-6">
               <button
                 onClick={startNewWeek}
-                className="px-6 py-3 rounded-xl font-bold flex items-center hover:opacity-90 transition-opacity"
+                className="px-4 sm:px-6 py-2 sm:py-3 rounded-xl font-bold flex items-center hover:opacity-90 transition-opacity text-sm sm:text-base"
                 style={{ backgroundColor: COLORS.olive, color: 'white' }}
               >
-                <Calendar size={20} className="mr-2" />
+                <Calendar size={18} className="sm:size-5 mr-1 sm:mr-2" />
                 Start New Week
               </button>
             </div>
@@ -228,39 +230,39 @@ export default function BudgetTracker() {
         {/* Summary Stats - Only show if allowance is set */}
         {weeklyAllowance > 0 && (
           <>
-            <div className="grid gap-4 md:grid-cols-4 mb-4">
-              <div className="rounded-xl p-4" style={{ backgroundColor: COLORS.lightPink }}>
-                <p className="text-sm font-medium" style={{ color: COLORS.pink }}>Weekly Allowance</p>
-                <p className="text-2xl font-bold" style={{ color: COLORS.darkGreen }}>{formatPeso(weeklyAllowance)}</p>
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-4">
+              <div className="rounded-xl p-3 sm:p-4 col-span-1" style={{ backgroundColor: COLORS.lightPink }}>
+                <p className="text-xs sm:text-sm font-medium" style={{ color: COLORS.pink }}>Weekly Allowance</p>
+                <p className="text-lg sm:text-xl lg:text-2xl font-bold" style={{ color: COLORS.darkGreen }}>{formatPeso(weeklyAllowance)}</p>
               </div>
-              <div className="rounded-xl p-4" style={{ backgroundColor: COLORS.lightPink }}>
-                <p className="text-sm font-medium" style={{ color: COLORS.pink }}>Total Spent</p>
-                <p className="text-2xl font-bold" style={{ color: COLORS.darkGreen }}>{formatPeso(totalSpent)}</p>
+              <div className="rounded-xl p-3 sm:p-4 col-span-1" style={{ backgroundColor: COLORS.lightPink }}>
+                <p className="text-xs sm:text-sm font-medium" style={{ color: COLORS.pink }}>Total Spent</p>
+                <p className="text-lg sm:text-xl lg:text-2xl font-bold" style={{ color: COLORS.darkGreen }}>{formatPeso(totalSpent)}</p>
               </div>
-              <div className="rounded-xl p-4" style={{ backgroundColor: COLORS.lightPink }}>
-                <p className="text-sm font-medium" style={{ color: COLORS.pink }}>Remaining</p>
-                <p className={`text-2xl font-bold ${remaining < 0 ? 'text-red-600' : ''}`} style={{ color: remaining >= 0 ? COLORS.darkGreen : undefined }}>
+              <div className="rounded-xl p-3 sm:p-4 col-span-1" style={{ backgroundColor: COLORS.lightPink }}>
+                <p className="text-xs sm:text-sm font-medium" style={{ color: COLORS.pink }}>Remaining</p>
+                <p className={`text-lg sm:text-xl lg:text-2xl font-bold ${remaining < 0 ? 'text-red-600' : ''}`} style={{ color: remaining >= 0 ? COLORS.darkGreen : undefined }}>
                   {formatPeso(remaining)}
                 </p>
               </div>
-              <div className="rounded-xl p-4" style={{ backgroundColor: COLORS.lightPink }}>
-                <p className="text-sm font-medium" style={{ color: COLORS.pink }}>Budget Used</p>
-                <p className="text-2xl font-bold" style={{ color: COLORS.darkGreen }}>
+              <div className="rounded-xl p-3 sm:p-4 col-span-1" style={{ backgroundColor: COLORS.lightPink }}>
+                <p className="text-xs sm:text-sm font-medium" style={{ color: COLORS.pink }}>Budget Used</p>
+                <p className="text-lg sm:text-xl lg:text-2xl font-bold" style={{ color: COLORS.darkGreen }}>
                   {budgetUsed.toFixed(0)}%
                 </p>
               </div>
             </div>
 
             {/* Monthly Projection */}
-            <div className="rounded-xl p-4 mb-8" style={{ backgroundColor: COLORS.lightGreen, border: `2px solid ${COLORS.darkGreen}` }}>
-              <div className="flex items-center justify-between">
+            <div className="rounded-xl p-3 sm:p-4 mb-6 sm:mb-8" style={{ backgroundColor: COLORS.lightGreen, border: `2px solid ${COLORS.darkGreen}` }}>
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-0">
                 <div>
-                  <h3 className="font-bold text-lg" style={{ color: COLORS.darkGreen }}>Monthly Projection</h3>
-                  <p className="text-sm" style={{ color: COLORS.darkGreen }}>Based on 4 weeks of savings</p>
+                  <h3 className="font-bold text-base sm:text-lg" style={{ color: COLORS.darkGreen }}>Monthly Projection</h3>
+                  <p className="text-xs sm:text-sm" style={{ color: COLORS.darkGreen }}>Based on 4 weeks of savings</p>
                 </div>
                 <div className="text-right">
-                  <div className="text-2xl font-bold" style={{ color: COLORS.darkGreen }}>{formatPeso(monthlySavings)}</div>
-                  <div className="text-sm" style={{ color: COLORS.darkGreen }}>
+                  <div className="text-lg sm:text-xl lg:text-2xl font-bold" style={{ color: COLORS.darkGreen }}>{formatPeso(monthlySavings)}</div>
+                  <div className="text-xs sm:text-sm" style={{ color: COLORS.darkGreen }}>
                     {formatPeso(savings)} saved this week × 4 weeks
                   </div>
                 </div>
@@ -270,7 +272,7 @@ export default function BudgetTracker() {
         )}
 
         {/* Main Content */}
-        <div className="space-y-6">
+        <div className="space-y-4 sm:space-y-6">
           <IncomeInput 
             income={weeklyAllowance} 
             onIncomeChange={setWeeklyAllowance}
@@ -324,19 +326,19 @@ export default function BudgetTracker() {
             </>
           ) : (
             /* Empty State - Show when no allowance is set */
-            <div className="rounded-2xl p-12 text-center" style={{ backgroundColor: COLORS.lightPink }}>
-              <Wallet size={64} className="mx-auto mb-6" style={{ color: COLORS.pink }} />
-              <h2 className="text-2xl font-bold mb-4" style={{ color: COLORS.pink }}>
+            <div className="rounded-2xl p-6 sm:p-8 lg:p-12 text-center" style={{ backgroundColor: COLORS.lightPink }}>
+              <Wallet size={48} className="sm:size-64 mx-auto mb-4 sm:mb-6" style={{ color: COLORS.pink }} />
+              <h2 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4" style={{ color: COLORS.pink }}>
                 Welcome to Your Budget Tracker! 🎉
               </h2>
-              <p className="text-lg mb-6" style={{ color: COLORS.pink }}>
+              <p className="text-base sm:text-lg mb-4 sm:mb-6" style={{ color: COLORS.pink }}>
                 Start by setting your weekly allowance above to begin tracking your expenses
                 using the 50/30/20 budgeting rule.
               </p>
-              <div className="max-w-2xl mx-auto text-left space-y-4">
-                <div className="p-4 rounded-xl" style={{ backgroundColor: COLORS.palePink }}>
-                  <h3 className="font-bold mb-2" style={{ color: COLORS.pink }}>How it works:</h3>
-                  <ul className="space-y-2" style={{ color: COLORS.pink }}>
+              <div className="max-w-2xl mx-auto text-left space-y-3 sm:space-y-4">
+                <div className="p-3 sm:p-4 rounded-xl" style={{ backgroundColor: COLORS.palePink }}>
+                  <h3 className="font-bold mb-2 text-sm sm:text-base" style={{ color: COLORS.pink }}>How it works:</h3>
+                  <ul className="space-y-1 sm:space-y-2 text-sm sm:text-base" style={{ color: COLORS.pink }}>
                     <li>1. <strong>Set your weekly allowance</strong> - Enter how much you receive each week</li>
                     <li>2. <strong>Add expenses</strong> - Track everything you spend</li>
                     <li>3. <strong>Follow 50/30/20 rule</strong> - 50% Needs, 30% Wants, 20% Savings</li>

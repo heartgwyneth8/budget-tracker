@@ -52,12 +52,74 @@ const getWeekDates = (weekNumber: number, year: number) => {
   }
 }
 
+// LocalStorage keys
+const STORAGE_KEYS = {
+  WEEKLY_ALLOWANCE: 'budget-tracker-weekly-allowance',
+  EXPENSES: 'budget-tracker-expenses',
+  WEEK_HISTORY: 'budget-tracker-week-history',
+  CURRENT_WEEK: 'budget-tracker-current-week',
+  CURRENT_YEAR: 'budget-tracker-current-year'
+}
+
 export default function BudgetTracker() {
-  const [weeklyAllowance, setWeeklyAllowance] = useState(0) // Start with 0 - user must input
-  const [currentWeek, setCurrentWeek] = useState(getCurrentWeek())
-  const [currentYear, setCurrentYear] = useState(new Date().getFullYear())
-  const [weekHistory, setWeekHistory] = useState<WeekSummary[]>([]) // Empty history
-  const [expenses, setExpenses] = useState<Expense[]>([]) // Empty expenses array
+  // Load initial data from localStorage
+  const loadFromLocalStorage = <T,>(key: string, defaultValue: T): T => {
+    if (typeof window === 'undefined') return defaultValue
+    try {
+      const item = localStorage.getItem(key)
+      return item ? JSON.parse(item) : defaultValue
+    } catch (error) {
+      console.error(`Error loading ${key} from localStorage:`, error)
+      return defaultValue
+    }
+  }
+
+  const saveToLocalStorage = <T,>(key: string, value: T) => {
+    if (typeof window === 'undefined') return
+    try {
+      localStorage.setItem(key, JSON.stringify(value))
+    } catch (error) {
+      console.error(`Error saving ${key} to localStorage:`, error)
+    }
+  }
+
+  // Initialize state with data from localStorage
+  const [weeklyAllowance, setWeeklyAllowance] = useState<number>(() => 
+    loadFromLocalStorage(STORAGE_KEYS.WEEKLY_ALLOWANCE, 0)
+  )
+  const [currentWeek, setCurrentWeek] = useState<number>(() => 
+    loadFromLocalStorage(STORAGE_KEYS.CURRENT_WEEK, getCurrentWeek())
+  )
+  const [currentYear, setCurrentYear] = useState<number>(() => 
+    loadFromLocalStorage(STORAGE_KEYS.CURRENT_YEAR, new Date().getFullYear())
+  )
+  const [weekHistory, setWeekHistory] = useState<WeekSummary[]>(() => 
+    loadFromLocalStorage(STORAGE_KEYS.WEEK_HISTORY, [])
+  )
+  const [expenses, setExpenses] = useState<Expense[]>(() => 
+    loadFromLocalStorage(STORAGE_KEYS.EXPENSES, [])
+  )
+
+  // Save data to localStorage whenever state changes
+  useEffect(() => {
+    saveToLocalStorage(STORAGE_KEYS.WEEKLY_ALLOWANCE, weeklyAllowance)
+  }, [weeklyAllowance])
+
+  useEffect(() => {
+    saveToLocalStorage(STORAGE_KEYS.CURRENT_WEEK, currentWeek)
+  }, [currentWeek])
+
+  useEffect(() => {
+    saveToLocalStorage(STORAGE_KEYS.CURRENT_YEAR, currentYear)
+  }, [currentYear])
+
+  useEffect(() => {
+    saveToLocalStorage(STORAGE_KEYS.WEEK_HISTORY, weekHistory)
+  }, [weekHistory])
+
+  useEffect(() => {
+    saveToLocalStorage(STORAGE_KEYS.EXPENSES, expenses)
+  }, [expenses])
 
   // Get current week's expenses
   const currentWeekExpenses = expenses.filter(expense => 
@@ -71,11 +133,13 @@ export default function BudgetTracker() {
       date: new Date().toISOString().split('T')[0],
       weekId: `${currentYear}-${currentWeek}`
     }
-    setExpenses([newExpense, ...expenses])
+    const updatedExpenses = [newExpense, ...expenses]
+    setExpenses(updatedExpenses)
   }
 
   const handleDeleteExpense = (id: string) => {
-    setExpenses(expenses.filter(expense => expense.id !== id))
+    const updatedExpenses = expenses.filter(expense => expense.id !== id)
+    setExpenses(updatedExpenses)
   }
 
   // Calculate totals for current week
@@ -129,7 +193,8 @@ export default function BudgetTracker() {
       remaining
     }
 
-    setWeekHistory([weekSummary, ...weekHistory])
+    const updatedWeekHistory = [weekSummary, ...weekHistory]
+    setWeekHistory(updatedWeekHistory)
     
     // Move to next week
     let nextWeek = currentWeek + 1
@@ -142,9 +207,6 @@ export default function BudgetTracker() {
     
     setCurrentWeek(nextWeek)
     setCurrentYear(nextYear)
-    
-    // Clear current week's expenses for fresh start
-    setExpenses(expenses.filter(expense => expense.weekId !== `${currentYear}-${currentWeek}`))
     
     alert(`Week ${currentWeek} saved! Starting Week ${nextWeek}.`)
   }
